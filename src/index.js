@@ -1,6 +1,8 @@
 import Module from "module";
 import { pathToFileURL } from "url";
 
+import { transform } from "esbuild";
+
 import schema from "./options.json";
 
 const parentModule = module;
@@ -107,7 +109,15 @@ export default async function loader(content) {
     }
   } else {
     try {
-      exports = execute(content, this);
+      const { code } = await transform(content, {
+        sourcefile: this.resourcePath,
+        jsx: "preserve",
+        minify: false,
+        sourcemap: false,
+        treeShaking: false,
+        loader: "tsx",
+      });
+      exports = execute(code, this);
     } catch (error) {
       callback(new Error(`Unable to execute "${this.resource}": ${error}`));
 
