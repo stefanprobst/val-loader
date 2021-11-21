@@ -1,7 +1,8 @@
 import Module from "module";
+import path from "path";
 import { pathToFileURL } from "url";
 
-import { transform } from "esbuild";
+import { build } from "esbuild";
 
 import schema from "./options.json";
 
@@ -109,15 +110,35 @@ export default async function loader(content) {
     }
   } else {
     try {
-      const { code } = await transform(content, {
-        sourcefile: this.resourcePath,
-        jsx: "preserve",
+      const { outputFiles } = await build({
+        stdin: {
+          contents: content,
+          sourcefile: this.resourcePath,
+          loader: "tsx",
+          resolveDir: path.dirname(this.resourcePath),
+        },
+        bundle: true,
+        write: false,
+        platform: "node",
+        format: "cjs",
+        plugins: [
+          {
+            name: "node-externals",
+            // eslint-disable-next-line no-shadow
+            setup(build) {
+              // @see https://github.com/evanw/esbuild/issues/619#issuecomment-751995294
+              const filter = /^[^./]|^\.[^./]|^\.\.[^/]/;
+              build.onResolve({ filter }, (args) => {
+                return { path: args.path, external: true };
+              });
+            },
+          },
+        ],
         minify: false,
         sourcemap: false,
-        treeShaking: false,
-        loader: "tsx",
-        format: "cjs",
+        treeShaking: true,
       });
+      const code = Buffer.from(outputFiles[0].contents).toString("utf-8");
       exports = execute(code, this);
     } catch (error) {
       callback(new Error(`Unable to execute "${this.resource}": ${error}`));
