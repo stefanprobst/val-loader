@@ -116,6 +116,7 @@ export default async function loader(content) {
         sourcemap: false,
         treeShaking: false,
         loader: "tsx",
+        format: "cjs",
       });
       exports = execute(code, this);
     } catch (error) {

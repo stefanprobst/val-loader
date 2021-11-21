@@ -1,6 +1,6 @@
 {
   "name": "@stefanprobst/val-loader",
-  "version": "4.0.0",
+  "version": "4.0.0-1",
   "description": "val loader module for webpack",
   "license": "MIT",
   "repository": "webpack-contrib/val-loader",
