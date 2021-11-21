@@ -127,7 +127,7 @@ export default async function loader(content) {
             // eslint-disable-next-line no-shadow
             setup(build) {
               // @see https://github.com/evanw/esbuild/issues/619#issuecomment-751995294
-              const filter = /^[^./]|^\.[^./]|^\.\.[^/]/;
+              const filter = /^[^./@~]|^\.[^./]|^\.\.[^/]|^@[^/]|^~[^/]/;
               build.onResolve({ filter }, (args) => {
                 return { path: args.path, external: true };
               });
