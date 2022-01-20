@@ -1,6 +1,6 @@
 {
   "name": "@stefanprobst/val-loader",
-  "version": "4.0.0-3",
+  "version": "4.0.0-4",
   "description": "val loader module for webpack",
   "license": "MIT",
   "repository": "webpack-contrib/val-loader",
@@ -12,6 +12,7 @@
     "url": "https://opencollective.com/webpack"
   },
   "main": "dist/cjs.js",
+  "types": "dist/index.d.ts",
   "engines": {
     "node": ">= 12.13.0"
   },
